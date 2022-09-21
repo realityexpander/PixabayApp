@@ -20,9 +20,20 @@ interface PixabayDao {
         """
             SELECT * 
             FROM pixabay_image_entity 
-            WHERE LOWER(tags) LIKE '%' || LOWER(:searchString) || '%'
+            WHERE LOWER(tags) LIKE '%' || LOWER(:searchTag) || '%'
         """
     )
-    suspend fun searchPixabay(searchString: String): List<PixabayImageEntity>
+    suspend fun searchImagesByTag(searchTag: String): List<PixabayImageEntity>
 
+    @Query(
+        """
+           SELECT * FROM pixabay_image_entity 
+           WHERE LOWER(originalSearchTerm) LIKE '%' || LOWER(:originalSearchTerm) || '%'
+        """
+        )
+    suspend fun searchImagesByOriginalSearchTerm(originalSearchTerm: String): List<PixabayImageEntity>
+
+
+    @Query("SELECT * FROM pixabay_image_entity WHERE id = :id")
+    suspend fun getPixabayImage(id: String): PixabayImageEntity?
 }

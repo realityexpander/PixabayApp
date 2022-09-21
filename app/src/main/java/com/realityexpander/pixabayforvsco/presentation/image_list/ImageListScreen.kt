@@ -1,4 +1,4 @@
-package com.realityexpander.pixabayforvsco.presentation.photo_listings
+package com.realityexpander.pixabayforvsco.presentation.image_list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,13 +15,13 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.realityexpander.pixabayforvsco.presentation.destinations.CompanyInfoScreenDestination
+import com.realityexpander.pixabayforvsco.presentation.destinations.PixabayImageScreenDestination
 
 @Composable
 @Destination(start = true)
-fun CompanyListingsScreen(
+fun ImageListScreen(
     navigator: DestinationsNavigator,
-    viewModel: CompanyListingsViewModel = hiltViewModel()
+    viewModel: ImageListViewModel = hiltViewModel()
 ) {
     val swipeRefreshState = rememberSwipeRefreshState(
         isRefreshing = viewModel.state.isRefreshing
@@ -34,7 +34,7 @@ fun CompanyListingsScreen(
         OutlinedTextField(
             value = state.searchQuery,
             onValueChange = {
-                viewModel.onEvent(CompanyListingsEvent.OnSearchQueryChanged(it))
+                viewModel.onEvent(ImageListEvent.OnSearchQueryChanged(it))
             },
             modifier = Modifier
                 .padding(16.dp)
@@ -45,6 +45,7 @@ fun CompanyListingsScreen(
             maxLines = 1,
             singleLine = true,
         )
+
         // Show loading indicator
         if (state.isLoading) {
             CircularProgressIndicator(
@@ -62,6 +63,7 @@ fun CompanyListingsScreen(
                 textAlign = TextAlign.Center
             )
         }
+
         // Show error message
         if (state.errorMessage != null) {
             Text(
@@ -72,30 +74,41 @@ fun CompanyListingsScreen(
                 textAlign = TextAlign.Center
             )
         }
+
         SwipeRefresh(
             state = swipeRefreshState,
             onRefresh = {
-                viewModel.onEvent(CompanyListingsEvent.OnRefresh)
+                viewModel.onEvent(ImageListEvent.OnRefresh)
             }
         ) {
+            if(state.pixabayImageList.isEmpty()) {
+                Text(
+                    "No images found",
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            }
+
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(state.companyListings.size) { i ->
-                    CompanyListingItem(
-                        companyListing = state.companyListings[i],
+                items(state.pixabayImageList.size) { i ->
+                    ImageItem(
+                        pixabayImage = state.pixabayImageList[i],
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                navigator.navigate(
-                                    CompanyInfoScreenDestination(
-                                        symbol = state.companyListings[i].companySymbol
-                                    )
-                                )
+                               navigator.navigate(
+                                   PixabayImageScreenDestination(
+                                       id = state.pixabayImageList[i].id
+                                   )
+                               )
                             },
                     )
 
-                    if (i < state.companyListings.size) { // dont show divider for last item
+                    if (i < state.pixabayImageList.size) { // don't show divider for last item
                         Divider(
                             modifier = Modifier.padding(horizontal = 0.dp)
                         )

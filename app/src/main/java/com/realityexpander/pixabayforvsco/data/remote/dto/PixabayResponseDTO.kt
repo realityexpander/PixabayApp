@@ -1,13 +1,13 @@
-package com.realityexpander.pixabayforvsco.data.local
+package com.realityexpander.pixabayforvsco.data.remote.dto
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+data class PixabayResponseDTO(
+    val total: Int = 0,
+    val totalHits: Int = 0,
+    val hits: List<PixabayImage> = emptyList()
+)
 
-@Entity(tableName = "pixabay_image_entity")
-data class PixabayImageEntity(
-    @PrimaryKey(autoGenerate = false)
-    var id: String = "",
-
+data class PixabayImage(
+    val id: String = "",
     val pageURL: String = "",
     val type: String = "",
     val tags: String = "",
@@ -28,6 +28,5 @@ data class PixabayImageEntity(
     val comments: Int = 0,
     val user_id: Int = 0,
     val user: String = "",
-    val userImageURL: String = "",
-    val originalSearchTerm: String = ""
+    val userImageURL: String = ""
 )
