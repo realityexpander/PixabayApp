@@ -1,6 +1,6 @@
 package com.realityexpander.pixabayforvsco.presentation.image_info
 
-import com.realityexpander.pixabayforvsco.data.remote.dto.PixabayImage
+import com.realityexpander.pixabayforvsco.domain.model.PixabayImage
 
 data class PixabayInfoState(
     val pixabayImage: PixabayImage? = null,
