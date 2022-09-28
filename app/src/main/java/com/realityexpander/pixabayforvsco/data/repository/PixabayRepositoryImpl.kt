@@ -4,7 +4,7 @@ import com.realityexpander.pixabayforvsco.data.local.PixabayDatabase
 import com.realityexpander.pixabayforvsco.data.mapper.toPixabayImage
 import com.realityexpander.pixabayforvsco.data.mapper.toPixabayImageEntity
 import com.realityexpander.pixabayforvsco.data.remote.dto.PixabayApi
-import com.realityexpander.pixabayforvsco.data.remote.dto.PixabayImage
+import com.realityexpander.pixabayforvsco.domain.model.PixabayImage
 import com.realityexpander.pixabayforvsco.domain.repository.PixabayRepository
 import com.realityexpander.pixabayforvsco.util.Resource
 import kotlinx.coroutines.flow.Flow

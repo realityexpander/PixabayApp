@@ -8,7 +8,7 @@ import androidx.room.Query
 @Dao
 interface PixabayDao {
 
-    @Insert(onConflict =  OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPixabayImages(pixabayImageEntity: List<PixabayImageEntity>)
 
     @Query("DELETE FROM pixabay_image_entity")
@@ -30,7 +30,7 @@ interface PixabayDao {
            SELECT * FROM pixabay_image_entity 
            WHERE LOWER(originalSearchTerm) LIKE '%' || LOWER(:originalSearchTerm) || '%'
         """
-        )
+    )
     suspend fun searchImagesByOriginalSearchTerm(originalSearchTerm: String): List<PixabayImageEntity>
 
 

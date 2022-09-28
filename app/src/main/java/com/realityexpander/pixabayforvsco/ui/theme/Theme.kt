@@ -15,7 +15,7 @@ private val DarkColorPalette = darkColors(
 
 
 @Composable
-fun StockMarketAppTheme(
+fun PixabayAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {

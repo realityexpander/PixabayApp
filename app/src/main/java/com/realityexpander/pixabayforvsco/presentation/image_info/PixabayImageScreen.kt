@@ -50,30 +50,35 @@ fun PixabayImageScreen(
 //                    },
                     filterQuality = FilterQuality.High,
                 ) {
-                    if (this.painter.state is AsyncImagePainter.State.Loading) {
-                        Column(
-                            modifier = Modifier
-                                .size(50.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            CircularProgressIndicator()
+                    when (this.painter.state) {
+                        is AsyncImagePainter.State.Loading -> {
+                            Column(
+                                modifier = Modifier
+                                    .size(50.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
                         }
-                    } else if (this.painter.state is AsyncImagePainter.State.Empty) {
-                        Text("No Image Available")
-                    } else if (this.painter.state is AsyncImagePainter.State.Error) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text("Error Loading Image")
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_android_black_24dp),
-                                contentDescription = null // decorative element
-                            )
+                        is AsyncImagePainter.State.Empty -> {
+                            Text("No Image Available")
                         }
-                    } else {
-                        SubcomposeAsyncImageContent()
+                        is AsyncImagePainter.State.Error -> {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text("Error Loading Image")
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_android_black_24dp),
+                                    contentDescription = null // decorative element
+                                )
+                            }
+                        }
+                        else -> {
+                            SubcomposeAsyncImageContent()
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))

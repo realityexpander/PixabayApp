@@ -1,7 +1,7 @@
 package com.realityexpander.pixabayforvsco.data.mapper
 
 import com.realityexpander.pixabayforvsco.data.local.PixabayImageEntity
-import com.realityexpander.pixabayforvsco.data.remote.dto.PixabayImage
+import com.realityexpander.pixabayforvsco.domain.model.PixabayImage
 
 ///// Pixabay mappers
 
