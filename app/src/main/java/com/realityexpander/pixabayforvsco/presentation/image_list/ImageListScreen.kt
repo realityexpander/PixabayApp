@@ -78,9 +78,12 @@ fun ImageListScreen(
             ) {
                 items(state.pixabayImageList.size) { i ->
                     // Kick off the loading (why not in a launched effect?)
-                    if (i >= state.pixabayImageList.size - 1 && !state.endReached && !state.isLoading) {
+                    if (i >= state.pixabayImageList.size - 1
+                        && !state.endReached
+                        && !state.isLoading
+                    ) {
                         // yes its a side effect but its fine in this case because of the checks above
-                        viewModel.loadNextItems()
+                        viewModel.getNextPixabayImagePageList()
                     }
 
                     ImageItem(

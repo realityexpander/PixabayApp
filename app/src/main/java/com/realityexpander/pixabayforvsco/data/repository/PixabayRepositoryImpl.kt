@@ -7,6 +7,7 @@ import com.realityexpander.pixabayforvsco.data.remote.dto.PixabayApi
 import com.realityexpander.pixabayforvsco.domain.model.PixabayImage
 import com.realityexpander.pixabayforvsco.domain.repository.PixabayRepository
 import com.realityexpander.pixabayforvsco.util.Resource
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okio.IOException
@@ -153,6 +154,8 @@ class PixabayRepositoryImpl @Inject constructor(
                 emit(Resource.Loading(false )) // We're done loading.
                 return@flow
             }
+
+            delay(1000)
 
             // Attempt to load next page from remote.
             val remoteImages = try {

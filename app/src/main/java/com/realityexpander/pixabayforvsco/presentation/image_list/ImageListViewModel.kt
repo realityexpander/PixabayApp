@@ -83,7 +83,7 @@ class ImageListViewModel @Inject constructor(
         state = state.copy(errorMessage = null)
     }
 
-    fun loadNextItems() {
+    fun getNextPixabayImagePageList() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.getNextPagePixabayImages(state.searchQuery, state.page + 1)
@@ -97,7 +97,6 @@ class ImageListViewModel @Inject constructor(
                                         page = state.page + 1,
                                         totalHits = result.totalHits,
                                         maxCachedPage = state.page + 1,
-                                        //endReached = result.data?.isEmpty() ?: true
                                         endReached = (result.data?.size ?: 0) >= result.totalHits
                                     )
                                 }
