@@ -7,10 +7,16 @@ import kotlinx.coroutines.flow.Flow
 interface PixabayRepository {
 
     suspend fun getPixabayImages(
-        fetchFromRemote: Boolean,
+        isFetchFromRemote: Boolean,
         query: String,
     ): Flow<Resource<List<PixabayImage>>>
 
     suspend fun getPixabayImage(id: String): Resource<PixabayImage>
+
+    suspend fun getNextPagePixabayImages(
+        query: String,
+        page: Int,
+        perPage: Int = 20
+    ): Flow<Resource<List<PixabayImage>>>
 
 }

@@ -5,7 +5,10 @@ import com.realityexpander.pixabayforvsco.domain.model.PixabayImage
 
 ///// Pixabay mappers
 
-fun PixabayImage.toPixabayImageEntity(originalSearchTerm: String): PixabayImageEntity {
+fun PixabayImage.toPixabayImageEntity(
+    originalSearchTerm: String,
+    page: Int = 1,
+): PixabayImageEntity {
     return PixabayImageEntity(
         id = id,
         pageURL = pageURL,
@@ -29,7 +32,8 @@ fun PixabayImage.toPixabayImageEntity(originalSearchTerm: String): PixabayImageE
         user_id = user_id,
         user = user,
         userImageURL = userImageURL,
-        originalSearchTerm = originalSearchTerm
+        originalSearchTerm = originalSearchTerm,
+        page = page
     )
 }
 
@@ -56,7 +60,8 @@ fun PixabayImageEntity.toPixabayImage(): PixabayImage {
         comments = comments,
         user_id = user_id,
         user = user,
-        userImageURL = userImageURL
+        userImageURL = userImageURL,
+        page = page
     )
 }
 

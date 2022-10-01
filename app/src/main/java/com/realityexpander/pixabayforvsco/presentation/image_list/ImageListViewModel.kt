@@ -29,6 +29,7 @@ class ImageListViewModel @Inject constructor(
     fun onEvent(event: ImageListEvent) {
 
         when (event) {
+            // Clear cache and refresh
             is ImageListEvent.OnRefresh -> {
                 clearErrorMessage()
                 getPixabayImageList(state.searchQuery, true)
@@ -47,20 +48,28 @@ class ImageListViewModel @Inject constructor(
         }
     }
 
+    // Get the initial list of image (first page) or the local cached list
     private fun getPixabayImageList(
         query: String = state.searchQuery.lowercase(),
-        fetchFromRemote: Boolean = false
+        isFetchFromRemote: Boolean = false
     ) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository
-                    .getPixabayImages(fetchFromRemote, query)
+                    .getPixabayImages(isFetchFromRemote, query)
                     .collect { result ->
                         withContext(Dispatchers.Main) {
                             state = when (result) {
-                                is Resource.Success -> state.copy(
-                                    pixabayImageList = result.data ?: emptyList()
-                                )
+                                is Resource.Success -> {
+                                    println("getPixabayImageList: result.data.size: ${result.data?.size}, endReached: ${(result.data?.size ?: 0) >= result.totalHits}")
+                                    state.copy(
+                                        pixabayImageList = result.data ?: emptyList(),
+                                        page = result.maxCachedPage, //result.data?.maxOfOrNull { it.page } ?: 0,  // get the max page number of the list
+                                        totalHits = result.totalHits,
+                                        maxCachedPage = result.maxCachedPage,
+                                        endReached = (result.data?.size ?: 0) >= result.totalHits
+                                    )
+                                }
                                 is Resource.Error -> state.copy(errorMessage = result.message)
                                 is Resource.Loading -> state.copy(isLoading = result.isLoading)
                             }
@@ -72,5 +81,32 @@ class ImageListViewModel @Inject constructor(
 
     private fun clearErrorMessage() {
         state = state.copy(errorMessage = null)
+    }
+
+    fun loadNextItems() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.getNextPagePixabayImages(state.searchQuery, state.page + 1)
+                    .collect { result ->
+                        withContext(Dispatchers.Main) {
+                            state = when (result) {
+                                is Resource.Success -> {
+                                    println("loadNextItems: result.data.size: ${result.data?.size}, endReached: ${(result?.data?.size ?: 0) >= result.totalHits}")
+                                    state.copy(
+                                        pixabayImageList = result.data ?: emptyList(),
+                                        page = state.page + 1,
+                                        totalHits = result.totalHits,
+                                        maxCachedPage = state.page + 1,
+                                        //endReached = result.data?.isEmpty() ?: true
+                                        endReached = (result.data?.size ?: 0) >= result.totalHits
+                                    )
+                                }
+                                is Resource.Error -> state.copy(errorMessage = result.message)
+                                is Resource.Loading -> state.copy(isLoading = result.isLoading)
+                            }
+                        }
+                    }
+            }
+        }
     }
 }

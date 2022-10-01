@@ -22,5 +22,6 @@ data class PixabayImage(
     val comments: Int = 0,
     val user_id: Int = 0,
     val user: String = "",
-    val userImageURL: String = ""
+    val userImageURL: String = "",
+    val page: Int = 0
 )

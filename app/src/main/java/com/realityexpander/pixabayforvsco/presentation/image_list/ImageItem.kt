@@ -1,7 +1,6 @@
 package com.realityexpander.pixabayforvsco.presentation.image_list
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,7 +12,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.realityexpander.pixabayforvsco.data.remote.dto.PixabayImage
+import com.realityexpander.pixabayforvsco.domain.model.PixabayImage
+
 
 //@Preview(showBackground = true, showSystemUi = true)
 //@Composable
@@ -41,6 +41,7 @@ import com.realityexpander.pixabayforvsco.data.remote.dto.PixabayImage
 fun ImageItem(
     pixabayImage: PixabayImage,
     modifier: Modifier = Modifier,
+    index: Int = 0,
 ) {
     Row(
         modifier = modifier,
@@ -72,7 +73,8 @@ fun ImageItem(
                 ) {
                     println("pixabayImage.tags: ${pixabayImage.tags}")
                     Text(
-                        text = pixabayImage.tags,
+                        //text = pixabayImage.tags + "=>$index:${pixabayImage.page}",
+                        text = "pg ${pixabayImage.page}=> item $index",
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
                         color = MaterialTheme.colors.onBackground,

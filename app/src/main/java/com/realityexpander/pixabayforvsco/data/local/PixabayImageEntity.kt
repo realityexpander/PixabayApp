@@ -29,5 +29,6 @@ data class PixabayImageEntity(
     val user_id: Int = 0,
     val user: String = "",
     val userImageURL: String = "",
-    val originalSearchTerm: String = ""
+    val originalSearchTerm: String = "",
+    val page: Int = 0
 )

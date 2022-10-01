@@ -46,24 +46,6 @@ fun ImageListScreen(
             singleLine = true,
         )
 
-        // Show loading indicator
-        if (state.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .width(50.dp),
-                color = Color.White
-            )
-            Text(
-                "Loading…",
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-        }
-
         // Show error message
         if (state.errorMessage != null) {
             Text(
@@ -81,7 +63,7 @@ fun ImageListScreen(
                 viewModel.onEvent(ImageListEvent.OnRefresh)
             }
         ) {
-            if(state.pixabayImageList.isEmpty()) {
+            if (state.pixabayImageList.isEmpty()) {
                 Text(
                     "No images found",
                     modifier = Modifier
@@ -95,16 +77,23 @@ fun ImageListScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(state.pixabayImageList.size) { i ->
+                    // Kick off the loading (why not in a launched effect?)
+                    if (i >= state.pixabayImageList.size - 1 && !state.endReached && !state.isLoading) {
+                        // yes its a side effect but its fine in this case because of the checks above
+                        viewModel.loadNextItems()
+                    }
+
                     ImageItem(
                         pixabayImage = state.pixabayImageList[i],
+                        index = i,
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                               navigator.navigate(
-                                   PixabayImageScreenDestination(
-                                       id = state.pixabayImageList[i].id
-                                   )
-                               )
+                                navigator.navigate(
+                                    PixabayImageScreenDestination(
+                                        id = state.pixabayImageList[i].id
+                                    )
+                                )
                             },
                     )
 
@@ -114,6 +103,24 @@ fun ImageListScreen(
                         )
                     }
                 }
+
+
+                if (state.isLoading) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.BottomCenter
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .height(55.dp)
+                                    .padding(bottom = 16.dp),
+                                color = Color.White
+                            )
+                        }
+                    }
+                }
+
             }
         }
     }

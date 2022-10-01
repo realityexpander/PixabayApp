@@ -13,6 +13,18 @@ interface PixabayApi {
         @Query("key") key: String = API_KEY,
         @Query("safesearch") safeSearch: Boolean = true,
         @Query("q") query: String = "",
+        @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = 20,
+    ): Response<PixabayResponseDTO>
+
+    @Headers("Content-Type: application/json")
+    @GET ("/api/")
+    suspend fun getPageOfImages(
+        @Query("key") key: String = API_KEY,
+        @Query("safesearch") safeSearch: Boolean = true,
+        @Query("q") query: String = "",
+        @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = 20,
     ): Response<PixabayResponseDTO>
 
     companion object {
