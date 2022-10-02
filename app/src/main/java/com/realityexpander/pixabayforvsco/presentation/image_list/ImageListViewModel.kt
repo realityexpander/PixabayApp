@@ -53,10 +53,12 @@ class ImageListViewModel @Inject constructor(
         query: String = state.searchQuery.lowercase(),
         isFetchFromRemote: Boolean = false
     ) {
+        val lowerCaseQuery = query.lowercase()
+
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository
-                    .getPixabayImages(isFetchFromRemote, query)
+                    .getPixabayImages(isFetchFromRemote, lowerCaseQuery)
                     .collect { result ->
                         withContext(Dispatchers.Main) {
                             state = when (result) {
@@ -83,10 +85,14 @@ class ImageListViewModel @Inject constructor(
         state = state.copy(errorMessage = null)
     }
 
-    fun getNextPixabayImagePageList() {
+    fun getNextPixabayImagePageList(
+        query: String = state.searchQuery.lowercase(),
+    ) {
+        val lowerCaseQuery = query.lowercase()
+
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                repository.getNextPagePixabayImages(state.searchQuery, state.page + 1)
+                repository.getNextPagePixabayImages(lowerCaseQuery, state.page + 1)
                     .collect { result ->
                         withContext(Dispatchers.Main) {
                             state = when (result) {

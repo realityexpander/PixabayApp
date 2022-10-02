@@ -83,7 +83,7 @@ fun ImageListScreen(
                         && !state.isLoading
                     ) {
                         // yes its a side effect but its fine in this case because of the checks above
-                        viewModel.getNextPixabayImagePageList()
+                        viewModel.getNextPixabayImagePageList(state.searchQuery)
                     }
 
                     ImageItem(
