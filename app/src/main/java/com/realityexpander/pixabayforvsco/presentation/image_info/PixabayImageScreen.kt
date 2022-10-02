@@ -1,7 +1,18 @@
 package com.realityexpander.pixabayforvsco.presentation.image_info
 
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.LinearLayout.LayoutParams
+import android.widget.TextView
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,13 +25,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import com.bumptech.glide.Glide
+import com.github.chrisbanes.photoview.PhotoView
 import com.ramcosta.composedestinations.annotation.Destination
 import com.realityexpander.pixabayforvsco.R
 import com.realityexpander.pixabayforvsco.ui.theme.DarkBlue
+import java.net.URL
+
 
 @Composable
 @Destination
@@ -36,11 +54,13 @@ fun PixabayImageScreen(
                 .fillMaxSize()
                 .background(DarkBlue)
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+
         ) {
             state.pixabayImage?.let { image ->
                 SubcomposeAsyncImage(
-                    model = image.webformatURL,
                     contentDescription = image.tags,
+                    model = image.webformatURL,
                     modifier = Modifier
                         .fillMaxWidth()
                         .defaultMinSize(minHeight = 300.dp),
@@ -81,7 +101,7 @@ fun PixabayImageScreen(
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(0.dp))
 
                 Text(
                     text = image.user,
@@ -90,6 +110,48 @@ fun PixabayImageScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+
+                AndroidView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+//                        .fillMaxSize()
+                        .defaultMinSize(minHeight = 300.dp),
+                    factory = { context ->
+                        PhotoView(context).apply {
+                            //setImageResource(R.mipmap.ic_launcher_round) // for test
+
+                            val circularProgressDrawable = CircularProgressDrawable(context)
+                            circularProgressDrawable.strokeWidth = 5f
+                            circularProgressDrawable.centerRadius = 30f
+                            circularProgressDrawable.start()
+
+                            Glide.with(context)
+                                .load(image.largeImageURL)
+                                //.placeholder(R.mipmap.ic_launcher)
+                                .placeholder(circularProgressDrawable)
+                                .into(this)
+
+                            layoutParams = ViewGroup.LayoutParams(
+                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                            )
+//                            setScale(1.5f, true)
+                            isZoomable = true
+//                            scale = 1.5f
+//                            setZoomTransitionDuration(500)
+//                            scaleType = ImageView.ScaleType.FIT_CENTER
+                            maximumScale = 10f
+
+                        }
+                    },
+                    // Needed?
+//                    update = { view ->
+//                        Glide.with(view)
+//                            .load(image.largeImageURL)
+//                            .placeholder(R.mipmap.ic_launcher)
+//                            .into(view)
+//                    }
+                )
 
                 Divider(
                     modifier = Modifier
@@ -100,6 +162,14 @@ fun PixabayImageScreen(
                 Text(
                     text = "Tags: " + image.tags,
                     fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Dimensions: " + image.imageWidth + " x " + image.imageHeight,
                     fontSize = 18.sp,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.fillMaxWidth()
