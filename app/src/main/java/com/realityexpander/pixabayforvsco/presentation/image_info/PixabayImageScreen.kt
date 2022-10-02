@@ -1,15 +1,7 @@
 package com.realityexpander.pixabayforvsco.presentation.image_info
 
-import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.LinearLayout.LayoutParams
-import android.widget.TextView
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -26,18 +18,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.github.chrisbanes.photoview.PhotoView
 import com.ramcosta.composedestinations.annotation.Destination
 import com.realityexpander.pixabayforvsco.R
 import com.realityexpander.pixabayforvsco.ui.theme.DarkBlue
-import java.net.URL
 
 
 @Composable
@@ -120,26 +110,17 @@ fun PixabayImageScreen(
                         PhotoView(context).apply {
                             //setImageResource(R.mipmap.ic_launcher_round) // for test
 
-                            val circularProgressDrawable = CircularProgressDrawable(context)
-                            circularProgressDrawable.strokeWidth = 5f
-                            circularProgressDrawable.centerRadius = 30f
-                            circularProgressDrawable.start()
-
                             Glide.with(context)
                                 .load(image.largeImageURL)
                                 //.placeholder(R.mipmap.ic_launcher)
-                                .placeholder(circularProgressDrawable)
+                                .transition(DrawableTransitionOptions.withCrossFade())
                                 .into(this)
 
                             layoutParams = ViewGroup.LayoutParams(
                                 ViewGroup.LayoutParams.WRAP_CONTENT,
                                 ViewGroup.LayoutParams.WRAP_CONTENT,
                             )
-//                            setScale(1.5f, true)
                             isZoomable = true
-//                            scale = 1.5f
-//                            setZoomTransitionDuration(500)
-//                            scaleType = ImageView.ScaleType.FIT_CENTER
                             maximumScale = 10f
 
                         }
