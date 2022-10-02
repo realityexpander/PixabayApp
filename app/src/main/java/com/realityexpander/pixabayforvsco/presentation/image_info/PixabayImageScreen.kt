@@ -125,7 +125,7 @@ fun PixabayImageScreen(
 
                         }
                     },
-                    // Needed?
+                    // Needed? For state updates.
 //                    update = { view ->
 //                        Glide.with(view)
 //                            .load(image.largeImageURL)
