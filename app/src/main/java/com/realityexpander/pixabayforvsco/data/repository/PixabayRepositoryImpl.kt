@@ -182,7 +182,7 @@ class PixabayRepositoryImpl @Inject constructor(
 
             // Save to local cache.
             remoteImages?.let { images ->
-                println("PixabayRepositoryImpl: getNextPagePixabayImages: new images.count: ${images.body()?.hits?.count()}")
+                //println("PixabayRepositoryImpl: getNextPagePixabayImages: new images.count: ${images.body()?.hits?.count()}")
 
                 images
                     .body()
@@ -198,7 +198,7 @@ class PixabayRepositoryImpl @Inject constructor(
                     .getImagesByOriginalSearchTerm(query)
                     .map { it.toPixabayImage() }
                     .also {
-                        println("PixabayRepositoryImpl: getNextPagePixabayImages: total images.count: ${it.count()}")
+                        //println("PixabayRepositoryImpl: getNextPagePixabayImages: total images.count: ${it.count()}")
                     }
 
                 // Get images from local cache, yes this is tiny bit inefficient but conforms to SSOT
