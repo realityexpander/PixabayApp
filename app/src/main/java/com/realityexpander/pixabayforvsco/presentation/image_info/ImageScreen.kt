@@ -146,7 +146,7 @@ fun PixabayImageScreen(
 //                    }
                 )
                 Text(
-                    text = "Tap once to zoom, pinch to zoom in/out, double tap to zoom out",
+                    text = "Double tap to zoom, pinch to zoom in/out, double tap to zoom out",
                     fontSize = 10.sp,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.fillMaxWidth()
