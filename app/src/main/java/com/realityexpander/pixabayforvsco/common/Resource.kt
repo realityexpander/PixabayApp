@@ -1,4 +1,4 @@
-package com.realityexpander.pixabayforvsco.util
+package com.realityexpander.pixabayforvsco.common
 
 sealed class Resource<T>(
     val data: T? = null,

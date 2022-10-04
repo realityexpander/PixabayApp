@@ -8,7 +8,7 @@ import com.realityexpander.pixabayforvsco.data.mapper.toPixabayImageEntity
 import com.realityexpander.pixabayforvsco.data.remote.dto.PixabayApi
 import com.realityexpander.pixabayforvsco.domain.model.PixabayImage
 import com.realityexpander.pixabayforvsco.domain.repository.PixabayRepository
-import com.realityexpander.pixabayforvsco.util.Resource
+import com.realityexpander.pixabayforvsco.common.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okio.IOException
@@ -43,7 +43,8 @@ class PixabayRepositoryImpl @Inject constructor(
                 dao.clearImagesByOriginalSearchTerm(query)
 
                 // Show the empty result
-                emit(Resource.Success(
+                emit(
+                    Resource.Success(
                     data = dao
                         .getImagesByOriginalSearchTerm(query)
                         .map {
@@ -54,7 +55,8 @@ class PixabayRepositoryImpl @Inject constructor(
 
             // Attempt to load from local cache & show current cache results, then attempt to fetch new data from remote.
             val localPixabayImages = dao.getImagesByOriginalSearchTerm(query)
-            emit(Resource.Success(
+            emit(
+                Resource.Success(
                 data = localPixabayImages.map {
                     it.toPixabayImage()
                 },
@@ -105,7 +107,8 @@ class PixabayRepositoryImpl @Inject constructor(
                     }
 
                 // Get images from local cache, yes this is tiny bit inefficient but conforms to SSOT
-                emit(Resource.Success(
+                emit(
+                    Resource.Success(
                     data = dao
                         .getImagesByOriginalSearchTerm(query)
                         .map {
@@ -197,7 +200,8 @@ class PixabayRepositoryImpl @Inject constructor(
                     }
 
                 // Get images from local cache, yes this is tiny bit inefficient but conforms to SSOT
-                emit(Resource.Success(
+                emit(
+                    Resource.Success(
                     data = items,
                     totalHits = images.body()?.totalHits ?: 0
                 ))

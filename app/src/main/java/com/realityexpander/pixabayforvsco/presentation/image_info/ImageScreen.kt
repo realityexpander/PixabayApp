@@ -7,8 +7,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.AbsoluteAlignment.TopRight
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterEnd
+import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.res.painterResource
@@ -19,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
@@ -34,7 +38,8 @@ import com.realityexpander.pixabayforvsco.ui.theme.DarkBlue
 @Destination
 fun PixabayImageScreen(
     id: String,
-    viewModel: ImageInfoViewModel = hiltViewModel()
+    viewModel: ImageInfoViewModel = hiltViewModel(),
+    navController: NavHostController
 ) {
     val state = viewModel.state
 
@@ -216,6 +221,32 @@ fun PixabayImageScreen(
             Text(
                 text = state.errorMessage,
                 color = MaterialTheme.colors.error
+            )
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(30.dp)
+            .padding(0.dp),
+        contentAlignment = TopRight
+    ) {
+        IconButton(
+            onClick = {
+                navController.popBackStack()
+            },
+            modifier = Modifier
+                .padding(0.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = android.R.drawable.ic_delete),
+                contentDescription = "Back",
+                modifier = Modifier
+                    .width(45.dp)
+                    .height(45.dp)
+                    .align(CenterEnd)
+                    .padding(top = 5.dp, end = 15.dp)
             )
         }
     }

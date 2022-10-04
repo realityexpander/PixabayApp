@@ -1,7 +1,7 @@
 package com.realityexpander.pixabayforvsco.domain.repository
 
 import com.realityexpander.pixabayforvsco.domain.model.PixabayImage
-import com.realityexpander.pixabayforvsco.util.Resource
+import com.realityexpander.pixabayforvsco.common.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface PixabayRepository {
