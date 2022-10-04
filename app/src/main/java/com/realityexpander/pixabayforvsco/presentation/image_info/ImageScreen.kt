@@ -34,7 +34,7 @@ import com.realityexpander.pixabayforvsco.ui.theme.DarkBlue
 @Destination
 fun PixabayImageScreen(
     id: String,
-    viewModel: PixabayImageInfoViewModel = hiltViewModel()
+    viewModel: ImageInfoViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
 
@@ -125,7 +125,7 @@ fun PixabayImageScreen(
 
                         }
                     },
-                    // Needed? For state updates.
+                    // Needed? For state updates - we don't update async, so no need.
 //                    update = { view ->
 //                        Glide.with(view)
 //                            .load(image.largeImageURL)

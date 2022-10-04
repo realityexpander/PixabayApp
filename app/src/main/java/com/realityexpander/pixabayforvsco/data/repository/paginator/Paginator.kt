@@ -1,4 +1,4 @@
-package com.realityexpander.pixabayforvsco.data.repository
+package com.realityexpander.pixabayforvsco.data.repository.paginator
 
 interface Paginator<Key, Item> {
     suspend fun loadNextItems()

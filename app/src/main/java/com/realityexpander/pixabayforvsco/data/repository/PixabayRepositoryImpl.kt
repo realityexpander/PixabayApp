@@ -156,7 +156,7 @@ class PixabayRepositoryImpl @Inject constructor(
                 return@flow
             }
 
-            //delay(1000) // todo: remove this delay (shows loading indicator for testing)
+            //delay(1000) // (shows loading indicator for testing)
 
             // Attempt to load next page from remote.
             val remoteImages = try {

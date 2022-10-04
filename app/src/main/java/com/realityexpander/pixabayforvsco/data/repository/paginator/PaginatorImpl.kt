@@ -1,4 +1,4 @@
-package com.realityexpander.pixabayforvsco.data.repository
+package com.realityexpander.pixabayforvsco.data.repository.paginator
 
 class PaginatorImpl<Key, Item>(
     private val initialKey: Key,
