@@ -132,13 +132,13 @@ fun ImageListScreen(
 
                 items(state.pixabayImageList.size) { i ->
 
-                    println(
-                        "N state.maxPageLoaded=${state.maxPageLoaded}, " +
-                                "i=$i, " +
-                                "state.pixabayImageList.size-5=${state.pixabayImageList.size - 5}, " +
-                                "i + ItemsPerPage=${i + ItemsPerPage}, " +
-                                "state.maxPageLoaded*ItemsPerPage=${state.maxPageLoaded * ItemsPerPage}"
-                    )
+//                    println(
+//                        "N state.maxPageLoaded=${state.maxPageLoaded}, " +
+//                                "i=$i, " +
+//                                "state.pixabayImageList.size-5=${state.pixabayImageList.size - 5}, " +
+//                                "i + ItemsPerPage=${i + ItemsPerPage}, " +
+//                                "state.maxPageLoaded*ItemsPerPage=${state.maxPageLoaded * ItemsPerPage}"
+//                    )
 
                     // Kick off the loading next page (why not in a launched effect?)
                     // eagerly load next page 5 items from the bottom
@@ -147,11 +147,12 @@ fun ImageListScreen(
                         && !state.isLoading
                         && !isLoadTriggered
                     ) {
-                        println(
-                            "isLoadTriggered state.maxPageLoaded=${state.maxPageLoaded}, " +
-                                    "i=$i, " +
-                                    "state.pixabayImageList.size=${state.pixabayImageList.size}, "
-                        )
+//                        println(
+//                            "isLoadTriggered state.maxPageLoaded=${state.maxPageLoaded}, " +
+//                                    "i=$i, " +
+//                                    "state.pixabayImageList.size=${state.pixabayImageList.size}, "
+//                        )
+
                         isLoadTriggered = true
 
                         // yes its a side effect but its fine in this case because of the checks above

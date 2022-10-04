@@ -27,12 +27,17 @@ import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.bumptech.glide.Glide
+import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.module.AppGlideModule
 import com.github.chrisbanes.photoview.PhotoView
 import com.ramcosta.composedestinations.annotation.Destination
 import com.realityexpander.pixabayforvsco.R
 import com.realityexpander.pixabayforvsco.ui.theme.DarkBlue
 
+
+@GlideModule
+class AppNameGlideModule : AppGlideModule()
 
 @Composable
 @Destination
