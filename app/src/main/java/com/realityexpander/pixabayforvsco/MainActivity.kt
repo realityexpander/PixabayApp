@@ -13,6 +13,9 @@ import com.realityexpander.pixabayforvsco.presentation.NavGraphs
 import com.realityexpander.pixabayforvsco.ui.theme.PixabayAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+// App based on this document:
+// https://docs.google.com/document/d/1GrW-Ucykm09ZHBEaNRSLeL4grhRoXTscksg6n-OPA2Y/edit
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

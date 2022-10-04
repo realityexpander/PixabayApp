@@ -65,7 +65,7 @@ class ImageListViewModel @Inject constructor(
 
                 searchJob?.cancel()
                 searchJob = viewModelScope.launch {
-                    // wait for 500ms to throttle the search
+                    // wait for 500ms to throttle the search (cancels if interrupted)
                     delay(500)
 
                     // Get the new data
