@@ -93,9 +93,6 @@ fun ImageListScreen(
                         && !state.endReached
                         && !state.isLoading
                         && !isLoadTriggered
-
-                        // Limit loading to just one page ahead
-                        //&& (i + ItemsPerPage >= state.maxPageLoaded * ItemsPerPage)
                     ) {
                         println("isLoadTriggered state.maxPageLoaded=${state.maxPageLoaded}, " +
                                 "i=$i, "+
