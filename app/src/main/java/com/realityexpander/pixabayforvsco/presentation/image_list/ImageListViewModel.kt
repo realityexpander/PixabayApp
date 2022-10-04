@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.realityexpander.pixabayforvsco.common.Constants.ItemsPerPage
 import com.realityexpander.pixabayforvsco.domain.repository.PixabayRepository
 import com.realityexpander.pixabayforvsco.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,27 +33,40 @@ class ImageListViewModel @Inject constructor(
             // Clear cache and refresh
             is ImageListEvent.OnRefresh -> {
                 clearErrorMessage()
-                getPixabayImageList(state.searchQuery, true)
+                state = state.copy(isLoading = true, maxPageLoaded = 1)
+
+                viewModelScope.launch {
+                    // Clear the cache
+                    repository.clearCacheForQuery(state.searchQuery)
+
+                    // Get the new data
+                    getPixabayImages(state.searchQuery, true)
+                }
             }
 
+            // New search query
             is ImageListEvent.OnSearchQueryChanged -> {
                 clearErrorMessage()
                 state = state.copy(searchQuery = event.query, isLoading = true)
 
                 searchJob?.cancel()
                 searchJob = viewModelScope.launch {
-                    delay(500) // wait for 500ms to throttle the search
-                    getPixabayImageList(event.query, false)
+                    // wait for 500ms to throttle the search
+                    delay(500)
+
+                    // Get the new data
+                    getPixabayImages(event.query, false)
                 }
             }
         }
     }
 
-    // Get the initial list of image (first page) or the local cached list
-    private fun getPixabayImageList(
+    // Get the list of images or the local cached list
+    private fun getPixabayImages(
         query: String = state.searchQuery.lowercase(),
         isFetchFromRemote: Boolean = false
     ) {
+        if(query.isEmpty()) return
         val lowerCaseQuery = query.lowercase()
 
         viewModelScope.launch {
@@ -63,12 +77,13 @@ class ImageListViewModel @Inject constructor(
                         withContext(Dispatchers.Main) {
                             state = when (result) {
                                 is Resource.Success -> {
-                                    println("getPixabayImageList: result.data.size: ${result.data?.size}, endReached: ${(result.data?.size ?: 0) >= result.totalHits}")
+                                    println("getPixabayImageList: result.data.size: ${result.data?.size}, " +
+                                            "endReached: ${(result.data?.size ?: 0) >= result.totalHits}")
                                     state.copy(
                                         pixabayImageList = result.data ?: emptyList(),
-                                        page = result.maxCachedPage, //result.data?.maxOfOrNull { it.page } ?: 0,  // get the max page number of the list
+                                        //page = 1,
+                                        maxPageLoaded = result.data?.maxOfOrNull { it.page } ?: 0,  // get the max page number from the list of images
                                         totalHits = result.totalHits,
-                                        maxCachedPage = result.maxCachedPage,
                                         endReached = (result.data?.size ?: 0) >= result.totalHits
                                     )
                                 }
@@ -85,24 +100,34 @@ class ImageListViewModel @Inject constructor(
         state = state.copy(errorMessage = null)
     }
 
-    fun getNextPixabayImagePageList(
+    fun getNextPagePixabayImages(
         query: String = state.searchQuery.lowercase(),
     ) {
+        if(query.isEmpty()) return
         val lowerCaseQuery = query.lowercase()
+
+        // Move to the next page
+        val nextPage = state.maxPageLoaded + 1
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                repository.getNextPagePixabayImages(lowerCaseQuery, state.page + 1)
+
+                repository
+                    .getNextPagePixabayImages(lowerCaseQuery, nextPage, ItemsPerPage)
                     .collect { result ->
                         withContext(Dispatchers.Main) {
                             state = when (result) {
                                 is Resource.Success -> {
-                                    println("loadNextItems: result.data.size: ${result.data?.size}, endReached: ${(result?.data?.size ?: 0) >= result.totalHits}")
+                                    println("loadNextItems: result.data.size: ${result.data?.size}, " +
+                                            "endReached: ${(result.data?.size ?: 0) >= result.totalHits}, " +
+                                            "maxPageLoaded: ${state.maxPageLoaded}, "+
+                                            "nextPage: $nextPage"
+                                    )
+
                                     state.copy(
                                         pixabayImageList = result.data ?: emptyList(),
-                                        page = state.page + 1,
+                                        maxPageLoaded = nextPage,
                                         totalHits = result.totalHits,
-                                        maxCachedPage = state.page + 1,
                                         endReached = (result.data?.size ?: 0) >= result.totalHits
                                     )
                                 }

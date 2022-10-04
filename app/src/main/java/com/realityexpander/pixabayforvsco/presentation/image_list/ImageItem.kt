@@ -71,7 +71,7 @@ fun ImageItem(
                         .weight(2f)
                         .align(Alignment.CenterVertically)
                 ) {
-                    println("pixabayImage.tags: ${pixabayImage.tags}")
+                    // println("pixabayImage.tags: ${pixabayImage.tags}")
                     Text(
                         //text = pixabayImage.tags + "=>$index:${pixabayImage.page}",
                         text = "pg ${pixabayImage.page}=> item $index",

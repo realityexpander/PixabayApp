@@ -19,4 +19,5 @@ interface PixabayRepository {
         perPage: Int = 20
     ): Flow<Resource<List<PixabayImage>>>
 
+    suspend fun clearCacheForQuery(query: String)
 }

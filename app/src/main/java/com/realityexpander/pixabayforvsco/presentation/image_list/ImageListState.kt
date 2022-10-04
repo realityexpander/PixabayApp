@@ -9,7 +9,6 @@ data class ImageListState(
     val errorMessage: String? = null,
     val pixabayImageList: List<PixabayImage> = emptyList(),
     val endReached: Boolean = false,
-    val page: Int = 1,
+    val maxPageLoaded: Int = 1,
     val totalHits: Int = 0,
-    val maxCachedPage: Int = 0
 )

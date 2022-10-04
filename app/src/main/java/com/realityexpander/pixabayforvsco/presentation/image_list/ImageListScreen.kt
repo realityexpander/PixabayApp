@@ -15,6 +15,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.realityexpander.pixabayforvsco.common.Constants.ItemsPerPage
 import com.realityexpander.pixabayforvsco.presentation.destinations.PixabayImageScreenDestination
 
 @Composable
@@ -76,14 +77,34 @@ fun ImageListScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
+                var isLoadTriggered = false
+
                 items(state.pixabayImageList.size) { i ->
-                    // Kick off the loading (why not in a launched effect?)
-                    if (i >= state.pixabayImageList.size - 1
+
+                    println("N state.maxPageLoaded=${state.maxPageLoaded}, " +
+                            "i=$i, " +
+                            "state.pixabayImageList.size-5=${state.pixabayImageList.size - 5}, " +
+                            "i + ItemsPerPage=${i+ItemsPerPage}, " +
+                            "state.maxPageLoaded*ItemsPerPage=${state.maxPageLoaded *ItemsPerPage}")
+
+                    // Kick off the loading next page (why not in a launched effect?)
+                    // eagerly load next page 5 items from the bottom
+                    if (i >= state.pixabayImageList.size - 5
                         && !state.endReached
                         && !state.isLoading
+                        && !isLoadTriggered
+
+                        // Limit loading to just one page ahead
+                        //&& (i + ItemsPerPage >= state.maxPageLoaded * ItemsPerPage)
                     ) {
+                        println("isLoadTriggered state.maxPageLoaded=${state.maxPageLoaded}, " +
+                                "i=$i, "+
+                                "state.pixabayImageList.size=${state.pixabayImageList.size}, "
+                        )
+                        isLoadTriggered = true
+
                         // yes its a side effect but its fine in this case because of the checks above
-                        viewModel.getNextPixabayImagePageList(state.searchQuery)
+                        viewModel.getNextPagePixabayImages(state.searchQuery)
                     }
 
                     ImageItem(

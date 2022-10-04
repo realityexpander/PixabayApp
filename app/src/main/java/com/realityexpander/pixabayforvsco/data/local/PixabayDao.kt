@@ -9,13 +9,14 @@ import androidx.room.Query
 interface PixabayDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPixabayImages(pixabayImageEntity: List<PixabayImageEntity>)
 
     @Query("DELETE FROM pixabay_image_entity")
     suspend fun clearPixabayImages()
 
     // "||" is like string "+" (concatenation) in kotlin
-    // tEs -> name LIKE %tes% OR TES == symbol
+    // tEs -> name LIKE %tes%
     @Query(
         """
             SELECT * 
@@ -31,9 +32,16 @@ interface PixabayDao {
            WHERE LOWER(originalSearchTerm) LIKE '%' || LOWER(:originalSearchTerm) || '%'
         """
     )
-    suspend fun searchImagesByOriginalSearchTerm(originalSearchTerm: String): List<PixabayImageEntity>
-
+    suspend fun getImagesByOriginalSearchTerm(originalSearchTerm: String): List<PixabayImageEntity>
 
     @Query("SELECT * FROM pixabay_image_entity WHERE id = :id")
     suspend fun getPixabayImage(id: String): PixabayImageEntity?
+
+    @Query(
+        """
+           DELETE FROM pixabay_image_entity 
+           WHERE LOWER(originalSearchTerm) LIKE '%' || LOWER(:originalSearchTerm) || '%'
+        """
+    )
+    suspend fun clearImagesByOriginalSearchTerm(originalSearchTerm: String)
 }

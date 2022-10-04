@@ -91,7 +91,7 @@ fun PixabayImageScreen(
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(0.dp))
+                Spacer(modifier = Modifier.height(1.dp))
 
                 Text(
                     text = image.user,
@@ -99,12 +99,12 @@ fun PixabayImageScreen(
                     fontSize = 14.sp,
                     modifier = Modifier.fillMaxWidth()
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 AndroidView(
                     modifier = Modifier
+                        .padding(2.dp)
                         .fillMaxWidth()
-//                        .fillMaxSize()
                         .defaultMinSize(minHeight = 300.dp),
                     factory = { context ->
                         PhotoView(context).apply {
@@ -132,6 +132,12 @@ fun PixabayImageScreen(
 //                            .placeholder(R.mipmap.ic_launcher)
 //                            .into(view)
 //                    }
+                )
+                Text(
+                    text = "Tap once to zoom, pinch to zoom in/out, double tap to zoom out",
+                    fontSize = 10.sp,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Divider(

@@ -5,9 +5,11 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "pixabay_image_entity")
 data class PixabayImageEntity(
+//    @PrimaryKey(autoGenerate = true)
+//    var room_id: Int = 0,
+
     @PrimaryKey(autoGenerate = false)
     var id: String = "",
-
     val pageURL: String = "",
     val type: String = "",
     val tags: String = "",

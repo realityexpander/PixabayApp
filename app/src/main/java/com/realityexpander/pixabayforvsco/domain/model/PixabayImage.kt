@@ -1,6 +1,7 @@
 package com.realityexpander.pixabayforvsco.domain.model
 
 data class PixabayImage(
+    var room_id: Int = 0,
     val id: String = "",
     val pageURL: String = "",
     val type: String = "",

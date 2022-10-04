@@ -10,6 +10,7 @@ fun PixabayImage.toPixabayImageEntity(
     page: Int = 1,
 ): PixabayImageEntity {
     return PixabayImageEntity(
+        //room_id = room_id,
         id = id,
         pageURL = pageURL,
         type = type,
@@ -39,6 +40,7 @@ fun PixabayImage.toPixabayImageEntity(
 
 fun PixabayImageEntity.toPixabayImage(): PixabayImage {
     return PixabayImage(
+        //room_id = room_id,
         id = id,
         pageURL = pageURL,
         type = type,

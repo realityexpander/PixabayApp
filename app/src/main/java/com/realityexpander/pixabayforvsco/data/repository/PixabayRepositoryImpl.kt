@@ -7,7 +7,6 @@ import com.realityexpander.pixabayforvsco.data.remote.dto.PixabayApi
 import com.realityexpander.pixabayforvsco.domain.model.PixabayImage
 import com.realityexpander.pixabayforvsco.domain.repository.PixabayRepository
 import com.realityexpander.pixabayforvsco.util.Resource
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okio.IOException
@@ -37,14 +36,14 @@ class PixabayRepositoryImpl @Inject constructor(
                 return@flow
             }
 
-            // Clear the cache if we're fetching from remote.
+            // Clear the cache (for the current query) if we're fetching from remote.
             if(isFetchFromRemote) {
-                dao.clearPixabayImages()
+                dao.clearImagesByOriginalSearchTerm(query)
 
                 // Show the empty result
                 emit(Resource.Success(
                     data = dao
-                        .searchImagesByOriginalSearchTerm(query)
+                        .getImagesByOriginalSearchTerm(query)
                         .map {
                             it.toPixabayImage()
                         },
@@ -52,26 +51,27 @@ class PixabayRepositoryImpl @Inject constructor(
             }
 
             // Attempt to load from local cache & show current cache results, then attempt to fetch new data from remote.
-            val localPixabayImages = dao.searchImagesByOriginalSearchTerm(query)
+            val localPixabayImages = dao.getImagesByOriginalSearchTerm(query)
             emit(Resource.Success(
                 data = localPixabayImages.map {
                     it.toPixabayImage()
                 },
                 totalHits = 1000000, // TODO: Get the total hits from the API.
-                maxCachedPage = localPixabayImages.maxByOrNull { it.page }?.page ?: 1
             ))
 
             // Check if cache is empty.
             val isDbEmpty = localPixabayImages.isEmpty()
-            val isLoadOnlyFromCache = !isDbEmpty && !isFetchFromRemote
-            if(isLoadOnlyFromCache) {
+            val isLoadFromCacheOnly = !isDbEmpty && !isFetchFromRemote
+
+            // If cache is NOT empty, we don't want to fetch from remote, so return with the current cached data.
+            if(isLoadFromCacheOnly) {
                 emit(Resource.Loading(false )) // Cache is good, We're done here.
                 return@flow
             }
 
             // Attempt to load from remote.
             val remoteImages = try {
-                api.getImages(query = query)
+                api.getImages(query = query, page = 1, perPage = 20)
             } catch (e: IOException) { // parse error
                 e.printStackTrace()
                 emit(Resource.Error(e.localizedMessage ?: "Error loading or parsing image listings"))
@@ -88,7 +88,7 @@ class PixabayRepositoryImpl @Inject constructor(
 
             // Save to local cache.
             remoteImages?.let { images ->
-                dao.clearPixabayImages()
+                dao.clearImagesByOriginalSearchTerm(query)
 
                 // Insert images into local cache.
                 images
@@ -105,12 +105,11 @@ class PixabayRepositoryImpl @Inject constructor(
                 // Get images from local cache, yes this is tiny bit inefficient but conforms to SSOT
                 emit(Resource.Success(
                     data = dao
-                        .searchImagesByOriginalSearchTerm(query)
+                        .getImagesByOriginalSearchTerm(query)
                         .map {
                             it.toPixabayImage()
                         },
                     totalHits = images.body()?.totalHits ?: 0,
-                    maxCachedPage = (images.body()?.hits?.maxByOrNull { it.page }?.page) ?: 1
                 ))
             }
 
@@ -155,7 +154,7 @@ class PixabayRepositoryImpl @Inject constructor(
                 return@flow
             }
 
-            delay(1000)
+            //delay(1000) // todo: remove this delay (shows loading indicator for testing)
 
             // Attempt to load next page from remote.
             val remoteImages = try {
@@ -176,27 +175,40 @@ class PixabayRepositoryImpl @Inject constructor(
 
             // Save to local cache.
             remoteImages?.let { images ->
+                println("PixabayRepositoryImpl: getNextPagePixabayImages: new images.count: ${images.body()?.hits?.count()}")
+
                 images
                     .body()
                     ?.hits
                     ?.map {
                         it.toPixabayImageEntity(query, page) // save the list with the query as "originalSearchTerm"
-                    }?.let {
-                        dao.insertPixabayImages(
-                            it
-                        )
+                    }?.let { pixabayImageEntities ->
+                        dao.insertPixabayImages(pixabayImageEntities)
+                    }
+
+                val items =
+                    dao
+                    .getImagesByOriginalSearchTerm(query)
+                    .map { it.toPixabayImage() }
+                    .also {
+                        println("PixabayRepositoryImpl: getNextPagePixabayImages: total images.count: ${it.count()}")
                     }
 
                 // Get images from local cache, yes this is tiny bit inefficient but conforms to SSOT
                 emit(Resource.Success(
-                    data = dao
-                        .searchImagesByOriginalSearchTerm(query)
-                        .map { it.toPixabayImage() },
+                    data = items,
                     totalHits = images.body()?.totalHits ?: 0
                 ))
             }
             emit(Resource.Loading(false))
         }
+    }
+
+    // Remove all the images from the local cache for a particular query. (preparing for a refresh)
+    override suspend fun clearCacheForQuery(query: String) {
+        val lowerCaseQuery = query.lowercase()
+
+        dao.clearImagesByOriginalSearchTerm(lowerCaseQuery)
     }
 }
 
