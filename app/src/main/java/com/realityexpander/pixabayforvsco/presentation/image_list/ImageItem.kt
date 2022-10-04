@@ -15,28 +15,6 @@ import coil.compose.AsyncImage
 import com.realityexpander.pixabayforvsco.domain.model.PixabayImage
 
 
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun CompanyListingPreview() {
-//    CompanyListingItem(
-//        companyListing = CompanyListing(
-//            companySymbol = "AAPL",
-//            companyName = "Apple Inc.",
-//            companyExchange = "NASDAQ",
-//        )
-//    )
-//}
-
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun TextPreview() {
-//    Text(
-//        text = "Hello World",
-////        modifier = Modifier.fillMaxWidth()
-//    )
-//}
-
-
 @Composable
 fun ImageItem(
     pixabayImage: PixabayImage,
@@ -74,7 +52,8 @@ fun ImageItem(
                     // println("pixabayImage.tags: ${pixabayImage.tags}")
                     Text(
                         //text = pixabayImage.tags + "=>$index:${pixabayImage.page}",
-                        text = "pg ${pixabayImage.page}=> item $index",
+                        //text = "pg ${pixabayImage.page}=> item $index",
+                        text = pixabayImage.tags,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
                         color = MaterialTheme.colors.onBackground,

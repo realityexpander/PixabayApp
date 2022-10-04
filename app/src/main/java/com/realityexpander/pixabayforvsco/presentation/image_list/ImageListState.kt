@@ -1,5 +1,6 @@
 package com.realityexpander.pixabayforvsco.presentation.image_list
 
+import com.realityexpander.pixabayforvsco.data.remote.ConnectivityObserver
 import com.realityexpander.pixabayforvsco.domain.model.PixabayImage
 
 data class ImageListState(
@@ -11,4 +12,5 @@ data class ImageListState(
     val endReached: Boolean = false,
     val maxPageLoaded: Int = 1,
     val totalHits: Int = 0,
+    val connectivityStatus: ConnectivityObserver.Status = ConnectivityObserver.Status.Available
 )

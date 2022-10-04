@@ -9,7 +9,6 @@ import androidx.room.Query
 interface PixabayDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPixabayImages(pixabayImageEntity: List<PixabayImageEntity>)
 
     @Query("DELETE FROM pixabay_image_entity")

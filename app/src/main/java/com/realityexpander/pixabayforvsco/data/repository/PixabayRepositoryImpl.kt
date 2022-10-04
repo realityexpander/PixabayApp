@@ -1,5 +1,7 @@
 package com.realityexpander.pixabayforvsco.data.repository
 
+import com.realityexpander.pixabayforvsco.common.Constants.ItemsPerPage
+import com.realityexpander.pixabayforvsco.common.Constants.MaxTotalHitsLimit
 import com.realityexpander.pixabayforvsco.data.local.PixabayDatabase
 import com.realityexpander.pixabayforvsco.data.mapper.toPixabayImage
 import com.realityexpander.pixabayforvsco.data.mapper.toPixabayImageEntity
@@ -56,7 +58,7 @@ class PixabayRepositoryImpl @Inject constructor(
                 data = localPixabayImages.map {
                     it.toPixabayImage()
                 },
-                totalHits = 1000000, // TODO: Get the total hits from the API.
+                totalHits = MaxTotalHitsLimit, // a placeholder value until its retrieved from the remote
             ))
 
             // Check if cache is empty.
@@ -71,7 +73,7 @@ class PixabayRepositoryImpl @Inject constructor(
 
             // Attempt to load from remote.
             val remoteImages = try {
-                api.getImages(query = query, page = 1, perPage = 20)
+                api.getImages(query = query, page = 1, perPage = ItemsPerPage)
             } catch (e: IOException) { // parse error
                 e.printStackTrace()
                 emit(Resource.Error(e.localizedMessage ?: "Error loading or parsing image listings"))

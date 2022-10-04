@@ -6,10 +6,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.realityexpander.pixabayforvsco.common.Constants.ItemsPerPage
+import com.realityexpander.pixabayforvsco.data.remote.ConnectivityObserver
+import com.realityexpander.pixabayforvsco.data.remote.ConnectivityObserverImpl
 import com.realityexpander.pixabayforvsco.domain.repository.PixabayRepository
 import com.realityexpander.pixabayforvsco.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,20 +23,32 @@ class ImageListViewModel @Inject constructor(
 ) : ViewModel() {
 
     var state by mutableStateOf(ImageListState())
+    lateinit var connectivityObserver: ConnectivityObserver
+
+    // toast event
+    private val _toastEvent = MutableSharedFlow<String>()
+    val toastEvent = _toastEvent
 
     private var searchJob: Job? = null
-
-    init {
-        //state = state.copy(isLoading = true)
-        //runBlocking {delay(500)} // To show loading state
-        //getPixabayImageList("", false)
-    }
 
     fun onEvent(event: ImageListEvent) {
 
         when (event) {
             // Clear cache and refresh
             is ImageListEvent.OnRefresh -> {
+
+                // Check for internet connection
+                if (state.connectivityStatus != ConnectivityObserver.Status.Available) {
+                    state = state.copy(isRefreshing = false)
+
+                    // Show toast
+                    viewModelScope.launch {
+                        _toastEvent.emit("No internet connection")
+                    }
+
+                    return
+                }
+
                 clearErrorMessage()
                 state = state.copy(isLoading = true, maxPageLoaded = 1)
 
@@ -59,6 +76,11 @@ class ImageListViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onConnectivityStatusChanged(status: ConnectivityObserver.Status) {
+        state = state.copy(connectivityStatus = status)
+        println("Connectivity status: $status")
     }
 
     // Get the list of images or the local cached list
