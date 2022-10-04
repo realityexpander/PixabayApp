@@ -31,10 +31,11 @@ class PixabayRepositoryImpl @Inject constructor(
         return flow {
             emit(Resource.Loading(true))
 
+            // If the query is blank, we don't want to get any images
             if (query.isBlank()) {
-                // If the query is blank, we don't want to fetch from remote.
                 emit(Resource.Success(emptyList()))
                 emit(Resource.Loading(false )) // We're done loading.
+
                 return@flow
             }
 
@@ -70,6 +71,7 @@ class PixabayRepositoryImpl @Inject constructor(
             // If cache is NOT empty, we don't want to fetch from remote, so return with the current cached data.
             if(isLoadFromCacheOnly) {
                 emit(Resource.Loading(false )) // Cache is good, We're done here.
+
                 return@flow
             }
 

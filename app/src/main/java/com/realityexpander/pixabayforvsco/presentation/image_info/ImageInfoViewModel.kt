@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ImageInfoViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,  // contains the navArgs
     private val repository: PixabayRepository
 ) : ViewModel() {
 
