@@ -107,20 +107,22 @@ fun PixabayImageScreen(
                     text = image.user,
                     fontStyle = FontStyle.Italic,
                     fontSize = 14.sp,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 AndroidView(
                     modifier = Modifier
-                        .padding(2.dp)
+                        .padding(0.dp)
                         .fillMaxWidth()
                         .defaultMinSize(minHeight = 300.dp),
                     factory = { context ->
                         PhotoView(context).apply {
                             //setImageResource(R.mipmap.ic_launcher_round) // for test
 
-                            Glide.with(context)
+                            GlideApp.with(context)
                                 .load(image.largeImageURL)
                                 //.placeholder(R.mipmap.ic_launcher)
                                 .transition(DrawableTransitionOptions.withCrossFade())
