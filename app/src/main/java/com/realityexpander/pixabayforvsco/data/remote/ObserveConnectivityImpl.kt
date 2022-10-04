@@ -64,8 +64,8 @@ class ConnectivityObserverImpl(
         }.distinctUntilChanged()
     }
 
-    // old way
-    override fun isNetworkAvailableDeprecated(): ConnectivityObserver.Status {
+    // Deprecated way
+    override fun getNetworkStatusDeprecated(): ConnectivityObserver.Status {
         val activeNetwork = connectivityManager.activeNetworkInfo
         return if (activeNetwork != null && activeNetwork.isConnected) {
             ConnectivityObserver.Status.Available

@@ -6,7 +6,7 @@ interface ConnectivityObserver {
 
     fun observe(): Flow<Status>
 
-    fun isNetworkAvailableDeprecated(): Status
+    fun getNetworkStatusDeprecated(): Status
 
     fun getNetworkStatus(): Status
 
