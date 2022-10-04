@@ -64,6 +64,12 @@ class ImageListViewModel @Inject constructor(
                 state = state.copy(searchQuery = event.query, isLoading = true)
 
                 searchJob?.cancel()
+
+                if(event.query.isEmpty()) {
+                    state = state.copy(isLoading = false)
+                    return
+                }
+
                 searchJob = viewModelScope.launch {
                     // wait for 500ms to throttle the search (cancels if interrupted)
                     delay(500)

@@ -3,6 +3,7 @@ package com.realityexpander.pixabayforvsco.presentation.image_list
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -71,7 +72,7 @@ fun ImageListScreen(
     ) {
 
         // show connectivity status
-        if (state.connectivityStatus != ConnectivityObserver.Status.Available) {
+        AnimatedVisibility (state.connectivityStatus != ConnectivityObserver.Status.Available) {
             Text(
                 "${state.connectivityStatus} internet connection",
                 modifier = Modifier
