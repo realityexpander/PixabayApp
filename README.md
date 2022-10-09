@@ -1,4 +1,4 @@
-# Pixabay App
+# Pixabay Image Search App
 Pixabay Image search App using SOLID architecture, uses Hilt, Room, Compose, Coroutines, Retrofit, www.pixabay.com API
 
 <!--
