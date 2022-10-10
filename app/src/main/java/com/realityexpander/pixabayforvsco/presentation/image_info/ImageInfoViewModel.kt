@@ -19,6 +19,7 @@ class ImageInfoViewModel @Inject constructor(
     private val repository: PixabayRepository
 ) : ViewModel() {
 
+    //change to StateFlow instead of compose State
     var state by mutableStateOf(ImageInfoState())
 
     init {
