@@ -12,7 +12,8 @@ Pixabay Image search App using SOLID architecture, uses Hilt, Room, Compose, Cor
 
 - Allows users to search for images by name
 - Images and Search results cached for offline use
-- Infinity scrolling only loads the search results that you scroll to
+- Infinity scrolling only loads the search results that you scroll 
+- Pinch & Zoom image preview
 
 ---- Tech used ----
 - List of Images and Search results are cached locally in a Room database
