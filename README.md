@@ -22,6 +22,9 @@ Pixabay Image search App using SOLID architecture, uses Hilt, Room, Compose, Cor
 - Infinite scroll using Compose (not recyclerview)
 - Uses PhotoView in an AndroidView from Compose
 - Uses Resource sealed class to handle errors and messaging
+- Coil image loading
+- Simplified type-safe Navigation using raamcosta Compose Destinations
+- Retrofit for access to Pixabay API
 
 To install the Apk:
 
